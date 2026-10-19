@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radar de Pauta | Universidad de La Salle</title>
+    <!-- Font Awesome para iconos (opcional, pero ayuda visualmente) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* ----- RESET Y VARIABLES ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+
+        :root {
+            --primary: #003366;      /* Azul La Salle */
+            --secondary: #c8102e;    /* Rojo La Salle */
+            --accent: #f2a900;       /* Amarillo */
+            --light-bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            background: var(--light-bg);
+            color: var(--text);
+            padding: 16px;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* ----- ENCABEZADO ----- */
+        header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--primary);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 20px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-area img {
+            height: 50px;
+            width: auto;
+            background: white;
+            border-radius: 8px;
+            padding: 4px 8px;
+        }
+
+        .logo-area h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-area span {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        .badge-ejemplo {
+            background: var(--accent);
+            color: #1e293b;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge-ejemplo button {
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 4px 12px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* ----- TARJETAS Y SECCIONES ----- */
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .card h2 {
+            font-size: 1.4rem;
+            margin-bottom: 16px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card h2 i {
+            color: var(--secondary);
+        }
+
+        .flex-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex: 1 1 180px;
+        }
+
+        .form-group label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input, select, textarea {
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0,51,102,0.1);
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            background: var(--primary);
+            color: white;
+        }
+
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        button.secondary {
+            background: var(--border);
+            color: var(--text);
+        }
+
+        button.danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        button.small {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        /* ----- CHIPS COMPETIDORES ----- */
+        .chips-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .chip {
+            background: #eef2ff;
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border: 1px solid #c7d2fe;
+        }
+
+        .chip .links {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .chip .links a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.75rem;
+            background: white;
+            padding: 2px 8px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .chip .links a:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .chip .remove {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0 4px;
+            line-height: 1;
+        }
+
+        /* ----- TABLAS ----- */
+        .table-wrapper {
+            overflow-x: auto;
+            margin-top: 16px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            min-width: 700px;
+        }
+
+        th {
+            background: #f1f5f9;
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-light);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 10px 8px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .estado-al-dia {
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .estado-revisar {
+            color: var(--warning);
+            font-weight: 600;
+        }
+
+        .cambio-positivo {
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .cambio-negativo {
+            color: var(--danger);
+            font-weight: 600;
+        }
+
+        .sparkline {
+            width: 80px;
+            height: 30px;
+        }
+
+        /* ----- TARJETAS DE ANUNCIOS ----- */
+        .ads-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .ad-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ad-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 20px -10px rgba(0,0,0,0.15);
+        }
+
+        .ad-card.highlight {
+            border: 3px solid var(--success);
+            background: #f0fdf4;
+        }
+
+        .ad-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            font-size: 0.8rem;
+        }
+
+        .ad-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .ad-body {
+            padding: 16px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .ad-rank {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--primary);
+            background: #eef2ff;
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 20px;
+            margin-bottom: 4px;
+            align-self: flex-start;
+        }
+
+        .ad-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .ad-meta span {
+            background: #f1f5f9;
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+
+        .ad-text {
+            font-size: 0.9rem;
+            color: var(--text);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .ad-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: auto;
+            padding-top: 8px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* ----- INDICADORES ----- */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .kpi-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .kpi-card .kpi-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1.2;
+        }
+
+        .kpi-card .kpi-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        /* ----- GRÁFICAS ----- */
+        .chart-container {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+
+        .bar-chart {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-width: 500px;
+        }
+
+        .bar-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .bar-label {
+            width: 120px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .bar-stack {
+            display: flex;
+            height: 30px;
+            border-radius: 8px;
+            overflow: hidden;
+            flex: 1;
+            background: #f1f5f9;
+        }
+
+        .bar-segment {
+            height: 100%;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+            overflow: hidden;
+        }
+
+        .heatmap {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .heatmap th, .heatmap td {
+            border: 1px solid var(--border);
+            padding: 10px;
+            text-align: center;
+        }
+
+        .heatmap td {
+            font-weight: 600;
+        }
+
+        /* ----- RESPONSIVE ----- */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+
+            .logo-area {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .flex-row {
+                flex-direction: column;
+            }
+
+            .form-group {
+                flex: 1 1 100%;
+            }
+
+            .bar-label {
+                width: 80px;
+                font-size: 0.8rem;
+            }
+
+            .kpi-card .kpi-value {
+                font-size: 1.5rem;
+            }
+        }
+
+        .conclusion-text {
+            background: #f0f9ff;
+            border-left: 6px solid var(--primary);
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-top: 16px;
+            font-size: 0.95rem;
+        }
+
+        .empty-message {
+            color: var(--text-light);
+            font-style: italic;
+            padding: 20px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- ENCABEZADO -->
+    <header>
+        <div class="logo-area">
+            <img src="data:image/webp;base64,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" alt="Universidad de La Salle">
+            <div>
+                <h1>Radar de Pauta</h1>
+                <span>Monitoreo de competencia en redes sociales · Especialización E-commerce y Marketing Digital</span>
+            </div>
+        </div>
+        <div class="badge-ejemplo" id="badgeEjemplo">
+            <i class="fas fa-flask"></i> Datos de ejemplo
+            <button id="borrarEjemplo">Borrar</button>
+        </div>
+    </header>
+
+    <!-- 1. BÚSQUEDA MASIVA DE COMPETIDORES -->
+    <section class="card">
+        <h2><i class="fas fa-users"></i> 1. Competidores</h2>
+        <div class="flex-row">
+            <div class="form-group">
+                <label for="compNombre">Nombre del competidor</label>
+                <input type="text" id="compNombre" placeholder="Ej: Competidor A">
+            </div>
+            <div class="form-group">
+                <label for="compDominio">Dominio web (opcional)</label>
+                <input type="text" id="compDominio" placeholder="Ej: competidorA.com">
+            </div>
+            <div class="form-group">
+                <label for="compPais">País</label>
+                <select id="compPais">
+                    <option value="CO" selected>Colombia (CO)</option>
+                    <option value="MX">México (MX)</option>
+                    <option value="AR">Argentina (AR)</option>
+                    <option value="CL">Chile (CL)</option>
+                    <option value="PE">Perú (PE)</option>
+                    <option value="EC">Ecuador (EC)</option>
+                    <option value="US">Estados Unidos (US)</option>
+                    <option value="ES">España (ES)</option>
+                </select>
+            </div>
+            <button id="agregarCompetidor"><i class="fas fa-plus"></i> Agregar competidor</button>
+        </div>
+        <div class="chips-container" id="chipsCompetidores"></div>
+    </section>
+
+    <!-- 2. SEGUIMIENTO SEMANAL -->
+    <section class="card">
+        <h2><i class="fas fa-calendar-week"></i> 2. Seguimiento semanal</h2>
+        <div class="flex-row" style="margin-bottom: 12px;">
+            <div class="form-group" style="flex: 0 0 200px;">
+                <label for="plazoRevision">Plazo de revisión</label>
+                <select id="plazoRevision">
+                    <option value="3">3 días</option>
+                    <option value="7" selected>7 días</option>
+                    <option value="14">14 días</option>
+                    <option value="30">30 días</option>
+                </select>
+            </div>
+            <p style="font-size:0.9rem; color:var(--text-light);">Registra los anuncios activos vistos hoy en cada red.</p>
+        </div>
+        <div class="table-wrapper">
+            <table id="tablaSeguimiento">
+                <thead>
+                    <tr>
+                        <th>Competidor</th>
+                        <th>Meta</th>
+                        <th>Google</th>
+                        <th>YouTube</th>
+                        <th>TikTok</th>
+                        <th>LinkedIn</th>
+                        <th>Total</th>
+                        <th>Cambio</th>
+                        <th>Tendencia</th>
+                        <th>Estado</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodySeguimiento"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- 3. TABLERO VISUAL DE PIEZAS PUBLICITARIAS -->
+    <section class="card">
+        <h2><i class="fas fa-images"></i> 3. Piezas publicitarias</h2>
+        <div class="flex-row" style="margin-bottom: 16px;">
+            <div class="form-group">
+                <label for="adCompetidor">Competidor</label>
+                <select id="adCompetidor"></select>
+            </div>
+            <div class="form-group">
+                <label for="adRed">Red</label>
+                <select id="adRed">
+                    <option value="Meta">Meta</option>
+                    <option value="Google">Google</option>
+                    <option value="YouTube">YouTube</option>
+                    <option value="TikTok">TikTok</option>
+                    <option value="LinkedIn">LinkedIn</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="adFormato">Formato</label>
+                <select id="adFormato">
+                    <option value="video">Video</option>
+                    <option value="reel">Reel</option>
+                    <option value="imagen">Imagen</option>
+                    <option value="carrusel">Carrusel</option>
+                    <option value="historia">Historia</option>
+                    <option value="búsqueda">Búsqueda</option>
+                    <option value="display">Display</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="adAlcance">Alcance</label>
+                <input type="number" id="adAlcance" placeholder="Ej: 15000" min="0">
+            </div>
+            <div class="form-group">
+                <label for="adInteracciones">Interacciones</label>
+                <input type="number" id="adInteracciones" placeholder="Ej: 1200" min="0">
+            </div>
+            <div class="form-group">
+                <label for="adFecha">Fecha inicio</label>
+                <input type="date" id="adFecha">
+            </div>
+        </div>
+        <div class="flex-row" style="margin-bottom: 16px;">
+            <div class="form-group" style="flex: 2 1 300px;">
+                <label for="adTexto">Texto del anuncio</label>
+                <textarea id="adTexto" rows="2" placeholder="Copy del anuncio..."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="adEnlace">Enlace</label>
+                <input type="url" id="adEnlace" placeholder="https://...">
+            </div>
+            <div class="form-group">
+                <label for="adImagen">Captura de pantalla</label>
+                <input type="file" id="adImagen" accept="image/*">
+            </div>
+            <button id="guardarAnuncio"><i class="fas fa-save"></i> Registrar anuncio</button>
+        </div>
+
+        <!-- FILTROS Y ORDEN -->
+        <div class="flex-row" style="margin-bottom: 8px;">
+            <div class="form-group">
+                <label for="filtroCompetidor">Filtrar competidor</label>
+                <select id="filtroCompetidor"><option value="">Todos</option></select>
+            </div>
+            <div class="form-group">
+                <label for="filtroRed">Filtrar red</label>
+                <select id="filtroRed"><option value="">Todas</option></select>
+            </div>
+            <div class="form-group">
+                <label for="ordenAnuncios">Ordenar por</label>
+                <select id="ordenAnuncios">
+                    <option value="alcance">Mayor alcance</option>
+                    <option value="interacciones">Más interacciones</option>
+                    <option value="tasa">Mejor tasa de interacción</option>
+                    <option value="dias">Más días activo</option>
+                    <option value="reciente">Más reciente</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="ads-grid" id="adsGrid"></div>
+        <p class="empty-message" id="emptyAds" style="display:none;">No hay piezas registradas con estos filtros.</p>
+    </section>
+
+    <!-- 4. ANÁLISIS -->
+    <section class="card">
+        <h2><i class="fas fa-chart-pie"></i> 4. Análisis</h2>
+        <div class="kpi-grid" id="kpiGrid"></div>
+
+        <div class="chart-container">
+            <h3 style="font-size:1rem; margin-bottom:12px;">Alcance por competidor (barras apiladas por red)</h3>
+            <div class="bar-chart" id="barChart"></div>
+        </div>
+
+        <div class="chart-container">
+            <h3 style="font-size:1rem; margin-bottom:12px;">Mapa de calor: piezas por competidor y red</h3>
+            <table class="heatmap" id="heatmap"></table>
+        </div>
+
+        <div class="conclusion-text" id="conclusion"></div>
+
+        <button id="copiarCSV" style="margin-top: 16px;"><i class="fas fa-file-csv"></i> Copiar todos los datos (CSV)</button>
+    </section>
+</div>
+
+<script>
+    // ==================== DATOS Y ESTADO ====================
+    const STORAGE_KEY = 'radar_pauta_data_v1';
+
+    // Estructura de datos
+    let state = {
+        competidores: [],       // { id, nombre, dominio, pais }
+        revisiones: {},         // idCompetidor -> { ultimaRevision: fechaISO, anuncios: { Meta, Google, ... }, historial: [ { fecha, total } ] }
+        anuncios: [],           // { id, competidorId, red, formato, alcance, interacciones, fechaInicio, texto, enlace, imagenBase64, fechaRegistro }
+        plazoRevision: 7,
+        ejemploCargado: false
+    };
+
+    // Colores por red para gráficas
+    const REDES = ['Meta', 'Google', 'YouTube', 'TikTok', 'LinkedIn'];
+    const COLORES_RED = {
+        Meta: '#1877F2',
+        Google: '#EA4335',
+        YouTube: '#FF0000',
+        TikTok: '#000000',
+        LinkedIn: '#0A66C2'
+    };
+
+    // ==================== UTILIDADES ====================
+    function saveState() {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        } catch (e) {
+            console.warn('Error guardando en localStorage', e);
+        }
+    }
+
+    function loadState() {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+            try {
+                const parsed = JSON.parse(raw);
+                state = { ...state, ...parsed };
+                // Asegurar que las propiedades existan
+                state.competidores = state.competidores || [];
+                state.revisiones = state.revisiones || {};
+                state.anuncios = state.anuncios || [];
+                state.plazoRevision = state.plazoRevision || 7;
+                state.ejemploCargado = state.ejemploCargado !== undefined ? state.ejemploCargado : false;
+            } catch (e) {
+                console.error('Error cargando estado', e);
+            }
+        }
+    }
+
+    function generarId() {
+        return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+    }
+
+    function formatFecha(iso) {
+        if (!iso) return '—';
+        const d = new Date(iso);
+        return d.toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' });
+    }
+
+    function diasDesde(iso) {
+        if (!iso) return Infinity;
+        const d = new Date(iso);
+        const hoy = new Date();
+        return Math.floor((hoy - d) / (1000 * 60 * 60 * 24));
+    }
+
+    function diasActiva(fechaInicio) {
+        if (!fechaInicio) return 0;
+        const d = new Date(fechaInicio);
+        const hoy = new Date();
+        const diff = Math.floor((hoy - d) / (1000 * 60 * 60 * 24));
+        return diff >= 0 ? diff : 0;
+    }
+
+    function truncarTexto(txt, max = 60) {
+        if (!txt) return '';
+        return txt.length > max ? txt.substring(0, max) + '…' : txt;
+    }
+
+    // ==================== DATOS DE EJEMPLO ====================
+    function cargarDatosEjemplo() {
+        // Competidores
+        const compA = { id: generarId(), nombre: 'Competidor A', dominio: 'competidora.com', pais: 'CO' };
+        const compB = { id: generarId(), nombre: 'Competidor B', dominio: 'competidorb.com', pais: 'CO' };
+        const compC = { id: generarId(), nombre: 'Competidor C', dominio: 'competidorc.com', pais: 'CO' };
+        state.competidores = [compA, compB, compC];
+
+        // Revisiones (historial de 3 semanas)
+        const hoy = new Date();
+        const hace7 = new Date(hoy); hace7.setDate(hoy.getDate() - 7);
+        const hace14 = new Date(hoy); hace14.setDate(hoy.getDate() - 14);
+
+        const revA = {
+            ultimaRevision: hoy.toISOString(),
+            anuncios: { Meta: 12, Google: 5, YouTube: 3, TikTok: 8, LinkedIn: 2 },
+            historial: [
+                { fecha: hace14.toISOString(), total: 20 },
+                { fecha: hace7.toISOString(), total: 25 },
+                { fecha: hoy.toISOString(), total: 30 }
+            ]
+        };
+        const revB = {
+            ultimaRevision: hace7.toISOString(),
+            anuncios: { Meta: 6, Google: 8, YouTube: 1, TikTok: 4, LinkedIn: 0 },
+            historial: [
+                { fecha: hace14.toISOString(), total: 15 },
+                { fecha: hace7.toISOString(), total: 19 }
+            ]
+        };
+        const revC = {
+            ultimaRevision: hace14.toISOString(),
+            anuncios: { Meta: 3, Google: 2, YouTube: 0, TikTok: 5, LinkedIn: 1 },
+            historial: [
+                { fecha: hace14.toISOString(), total: 11 }
+            ]
+        };
+        state.revisiones = {
+            [compA.id]: revA,
+            [compB.id]: revB,
+            [compC.id]: revC
+        };
+
+        // Anuncios de ejemplo (con imágenes placeholder generadas como SVG en base64 para no depender de archivos)
+        function imagenPlaceholder(texto, color) {
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="480" height="300" viewBox="0 0 480 300">
+                <rect width="480" height="300" fill="${color}"/>
+                <text x="240" y="150" font-family="Arial" font-size="24" fill="white" text-anchor="middle" dominant-baseline="middle">${texto}</text>
+            </svg>`;
+            return 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg)));
+        }
+
+        const anuncios = [
+            {
+                id: generarId(), competidorId: compA.id, red: 'Meta', formato: 'video',
+                alcance: 45000, interacciones: 3200, fechaInicio: new Date(hoy.getTime() - 5*86400000).toISOString().split('T')[0],
+                texto: '¡Descubre el nuevo modelo deportivo! Velocidad y elegancia en un solo lugar.',
+                enlace: 'https://competidora.com/deportivo', imagenBase64: imagenPlaceholder('Competidor A - Meta', '#1877F2'),
+                fechaRegistro: hoy.toISOString()
+            },
+            {
+                id: generarId(), competidorId: compA.id, red: 'TikTok', formato: 'reel',
+                alcance: 32000, interacciones: 5600, fechaInicio: new Date(hoy.getTime() - 3*86400000).toISOString().split('T')[0],
+                texto: 'Challenge #AceleraConA. Muestra tu estilo al volante.',
+                enlace: 'https://competidora.com/tiktok', imagenBase64: imagenPlaceholder('Competidor A - TikTok', '#000000'),
+                fechaRegistro: hoy.toISOString()
+            },
+            {
+                id: generarId(), competidorId: compB.id, red: 'Google', formato: 'búsqueda',
+                alcance: 18000, interacciones: 450, fechaInicio: new Date(hoy.getTime() - 10*86400000).toISOString().split('T')[0],
+                texto: 'Compra tu auto usado certificado. Financiación inmediata.',
+                enlace: 'https://competidorb.com/usados', imagenBase64: imagenPlaceholder('Competidor B - Google', '#EA4335'),
+                fechaRegistro: hoy.toISOString()
+            },
+            {
+                id: generarId(), competidorId: compB.id, red: 'YouTube', formato: 'video',
+                alcance: 28000, interacciones: 2100, fechaInicio: new Date(hoy.getTime() - 7*86400000).toISOString().split('T')[0],
+                texto: 'Review completa: el nuevo SUV híbrido. ¿Vale la pena?',
+                enlace: 'https://competidorb.com/youtube', imagenBase64: imagenPlaceholder('Competidor B - YouTube', '#FF0000'),
+                fechaRegistro: hoy.toISOString()
+            },
+            {
+                id: generarId(), competidorId: compC.id, red: 'Meta', formato: 'carrusel',
+                alcance: 12000, interacciones: 800, fechaInicio: new Date(hoy.getTime() - 2*86400000).toISOString().split('T')[0],
+                texto: 'Conoce nuestra gama de accesorios premium para tu vehículo.',
+                enlace: 'https://competidorc.com/accesorios', imagenBase64: imagenPlaceholder('Competidor C - Meta', '#1877F2'),
+                fechaRegistro: hoy.toISOString()
+            },
+            {
+                id: generarId(), competidorId: compC.id, red: 'TikTok', formato: 'historia',
+                alcance: 9000, interacciones: 1500, fechaInicio: new Date(hoy.getTime() - 1*86400000).toISOString().split('T')[0],
+                texto: 'Detrás de cámaras: así se fabrica nuestro nuevo motor.',
+                enlace: 'https://competidorc.com/tiktok', imagenBase64: imagenPlaceholder('Competidor C - TikTok', '#000000'),
+                fechaRegistro: hoy.toISOString()
+            },
+            {
+                id: generarId(), competidorId: compA.id, red: 'LinkedIn', formato: 'imagen',
+                alcance: 5000, interacciones: 300, fechaInicio: new Date(hoy.getTime() - 12*86400000).toISOString().split('T')[0],
+                texto: 'Únete a nuestro equipo de ingenieros automotrices.',
+                enlace: 'https://competidora.com/empleo', imagenBase64: imagenPlaceholder('Competidor A - LinkedIn', '#0A66C2'),
+                fechaRegistro: hoy.toISOString()
+            }
+        ];
+        state.anuncios = anuncios;
+        state.ejemploCargado = true;
+        state.plazoRevision = 7;
+        saveState();
+    }
+
+    // ==================== RENDERIZADO ====================
+    function renderTodo() {
+        renderChips();
+        renderSelects();
+        renderTablaSeguimiento();
+        renderAnuncios();
+        renderAnalisis();
+        renderBadgeEjemplo();
+    }
+
+    function renderBadgeEjemplo() {
+        const badge = document.getElementById('badgeEjemplo');
+        if (state.ejemploCargado) {
+            badge.style.display = 'flex';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+
+    // --- 1. CHIPS COMPETIDORES ---
+    function renderChips() {
+        const container = document.getElementById('chipsCompetidores');
+        if (!container) return;
+        container.innerHTML = '';
+        if (state.competidores.length === 0) {
+            container.innerHTML = '<p class="empty-message">Aún no has agregado competidores. Usa el formulario de arriba.</p>';
+            return;
+        }
+        state.competidores.forEach(comp => {
+            const chip = document.createElement('div');
+            chip.className = 'chip';
+            const nombreEnc = encodeURIComponent(comp.nombre);
+            const dominioEnc = encodeURIComponent(comp.dominio || comp.nombre.replace(/\s+/g, '').toLowerCase() + '.com');
+            const pais = comp.pais || 'CO';
+            chip.innerHTML = `
+                <div style="display:flex; flex-direction:column; gap:4px;">
+                    <strong>${comp.nombre}</strong>
+                    <div class="links">
+                        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=${pais}&q=${nombreEnc}" target="_blank" rel="noopener">Meta</a>
+                        <a href="https://adstransparency.google.com/?region=${pais}&domain=${dominioEnc}" target="_blank" rel="noopener">Google</a>
+                        <a href="https://ads.tiktok.com/business/creativecenter/inspiration/topads/pc/es?region=${pais}" target="_blank" rel="noopener">TikTok</a>
+                        <a href="https://www.linkedin.com/ad-library/search?companyName=${nombreEnc}" target="_blank" rel="noopener">LinkedIn</a>
+                        <a href="https://www.youtube.com/results?search_query=${nombreEnc}" target="_blank" rel="noopener">YouTube</a>
+                    </div>
+                </div>
+                <button class="remove" data-id="${comp.id}" title="Eliminar">✕</button>
+            `;
+            container.appendChild(chip);
+        });
+        container.querySelectorAll('.remove').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = e.target.getAttribute('data-id');
+                eliminarCompetidor(id);
+            });
+        });
+    }
+
+    function eliminarCompetidor(id) {
+        if (!confirm('¿Eliminar este competidor y todos sus datos asociados?')) return;
+        state.competidores = state.competidores.filter(c => c.id !== id);
+        delete state.revisiones[id];
+        state.anuncios = state.anuncios.filter(a => a.competidorId !== id);
+        saveState();
+        renderTodo();
+    }
+
+    // --- SELECTS DINÁMICOS ---
+    function renderSelects() {
+        const selects = ['adCompetidor', 'filtroCompetidor'];
+        selects.forEach(selId => {
+            const sel = document.getElementById(selId);
+            if (!sel) return;
+            const valorActual = sel.value;
+            sel.innerHTML = selId === 'filtroCompetidor' ? '<option value="">Todos</option>' : '';
+            state.competidores.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c.id;
+                opt.textContent = c.nombre;
+                sel.appendChild(opt);
+            });
+            if (valorActual) sel.value = valorActual;
+        });
+
+        const filtroRed = document.getElementById('filtroRed');
+        if (filtroRed) {
+            const valorRed = filtroRed.value;
+            filtroRed.innerHTML = '<option value="">Todas</option>';
+            REDES.forEach(r => {
+                const opt = document.createElement('option');
+                opt.value = r;
+                opt.textContent = r;
+                filtroRed.appendChild(opt);
+            });
+            if (valorRed) filtroRed.value = valorRed;
+        }
+    }
+
+    // --- 2. TABLA DE SEGUIMIENTO ---
+    function renderTablaSeguimiento() {
+        const tbody = document.getElementById('tbodySeguimiento');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+        if (state.competidores.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="11" class="empty-message">Agrega competidores para comenzar el seguimiento.</td></tr>';
+            return;
+        }
+        const plazo = state.plazoRevision || 7;
+
+        state.competidores.forEach(comp => {
+            const rev = state.revisiones[comp.id] || {
+                ultimaRevision: null,
+                anuncios: { Meta: 0, Google: 0, YouTube: 0, TikTok: 0, LinkedIn: 0 },
+                historial: []
+            };
+            const anuncios = rev.anuncios || {};
+            const total = REDES.reduce((sum, r) => sum + (Number(anuncios[r]) || 0), 0);
+
+            // Cambio vs revisión anterior
+            let cambioHTML = '—';
+            const hist = rev.historial || [];
+            if (hist.length >= 2) {
+                const anterior = hist[hist.length - 2].total || 0;
+                const actual = total;
+                if (anterior > 0) {
+                    const pct = ((actual - anterior) / anterior) * 100;
+                    const clase = pct >= 0 ? 'cambio-positivo' : 'cambio-negativo';
+                    const flecha = pct >= 0 ? '▲' : '▼';
+                    cambioHTML = `<span class="${clase}">${flecha} ${Math.abs(pct).toFixed(1)}%</span>`;
+                } else if (actual > 0) {
+                    cambioHTML = '<span class="cambio-positivo">▲ nuevo</span>';
+                } else {
+                    cambioHTML = '<span style="color:var(--text-light);">0%</span>';
+                }
+            } else if (hist.length === 1) {
+                cambioHTML = '<span style="color:var(--text-light);">—</span>';
+            }
+
+            // Sparkline SVG
+            const sparkline = generarSparkline(hist.map(h => h.total || 0));
+
+            // Estado según plazo
+            const dias = rev.ultimaRevision ? diasDesde(rev.ultimaRevision) : Infinity;
+            let estadoHTML;
+            if (dias === Infinity) {
+                estadoHTML = '<span class="estado-revisar">Revisar</span>';
+            } else if (dias <= plazo) {
+                estadoHTML = `<span class="estado-al-dia">Al día (${dias}d)</span>`;
+            } else {
+                estadoHTML = `<span class="estado-revisar">Revisar (${dias}d)</span>`;
+            }
+
+            // Aviso red nueva (comparar con revisión anterior)
+            let avisoRedNueva = '';
+            if (hist.length >= 2 && rev.historial[hist.length - 2].anuncios) {
+                const anteriorAnuncios = rev.historial[hist.length - 2].anuncios || {};
+                REDES.forEach(r => {
+                    const antes = Number(anteriorAnuncios[r]) || 0;
+                    const ahora = Number(anuncios[r]) || 0;
+                    if (antes === 0 && ahora > 0) {
+                        avisoRedNueva += `<span style="background:#fef3c7; color:#92400e; padding:2px 6px; border-radius:12px; font-size:0.7rem; margin-left:4px;">Nueva: ${r}</span>`;
+                    }
+                });
+            }
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><strong>${comp.nombre}</strong> ${avisoRedNueva}</td>
+                <td><input type="number" min="0" value="${anuncios.Meta || 0}" data-comp="${comp.id}" data-red="Meta" class="input-revision" style="width:60px; padding:4px;"></td>
+                <td><input type="number" min="0" value="${anuncios.Google || 0}" data-comp="${comp.id}" data-red="Google" class="input-revision" style="width:60px; padding:4px;"></td>
+                <td><input type="number" min="0" value="${anuncios.YouTube || 0}" data-comp="${comp.id}" data-red="YouTube" class="input-revision" style="width:60px; padding:4px;"></td>
+                <td><input type="number" min="0" value="${anuncios.TikTok || 0}" data-comp="${comp.id}" data-red="TikTok" class="input-revision" style="width:60px; padding:4px;"></td>
+                <td><input type="number" min="0" value="${anuncios.LinkedIn || 0}" data-comp="${comp.id}" data-red="LinkedIn" class="input-revision" style="width:60px; padding:4px;"></td>
+                <td><strong>${total}</strong></td>
+                <td>${cambioHTML}</td>
+                <td>${sparkline}</td>
+                <td>${estadoHTML}</td>
+                <td><button class="small" data-comp="${comp.id}" onclick="guardarRevision('${comp.id}')">Guardar revisión de hoy</button></td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function generarSparkline(valores) {
+        if (!valores || valores.length === 0) return '<span style="color:var(--text-light);">—</span>';
+        const w = 80, h = 30;
+        const max = Math.max(...valores, 1);
+        const step = valores.length > 1 ? w / (valores.length - 1) : w;
+        const puntos = valores.map((v, i) => {
+            const x = i * step;
+            const y = h - (v / max) * (h - 4) - 2;
+            return `${x},${y}`;
+        }).join(' ');
+        return `<svg class="sparkline" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+            <polyline points="${puntos}" fill="none" stroke="#003366" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+        </svg>`;
+    }
+
+    window.guardarRevision = function(compId) {
+        const inputs = document.querySelectorAll(`.input-revision[data-comp="${compId}"]`);
+        const anuncios = {};
+        inputs.forEach(inp => {
+            anuncios[inp.getAttribute('data-red')] = Number(inp.value) || 0;
+        });
+        const total = REDES.reduce((sum, r) => sum + (anuncios[r] || 0), 0);
+
+        if (!state.revisiones[compId]) {
+            state.revisiones[compId] = { ultimaRevision: null, anuncios: {}, historial: [] };
+        }
+        const rev = state.revisiones[compId];
+
+        // Si hay una revisión de hoy, actualizarla; si no, agregar al historial
+        const hoyISO = new Date().toISOString();
+        const hoyStr = hoyISO.split('T')[0];
+        const existeHoy = rev.historial.some(h => h.fecha && h.fecha.split('T')[0] === hoyStr);
+
+        if (existeHoy) {
+            // Actualizar la última entrada de hoy
+            const idx = rev.historial.findIndex(h => h.fecha && h.fecha.split('T')[0] === hoyStr);
+            rev.historial[idx] = { fecha: hoyISO, total, anuncios: { ...anuncios } };
+        } else {
+            rev.historial.push({ fecha: hoyISO, total, anuncios: { ...anuncios } });
+        }
+
+        rev.ultimaRevision = hoyISO;
+        rev.anuncios = anuncios;
+        saveState();
+        renderTodo();
+        alert(`✅ Revisión guardada para ${state.competidores.find(c => c.id === compId)?.nombre}. Total: ${total} anuncios.`);
+    };
+
+    // --- 3. ANUNCIOS ---
+    function renderAnuncios() {
+        const grid = document.getElementById('adsGrid');
+        const empty = document.getElementById('emptyAds');
+        if (!grid) return;
+
+        const filtroComp = document.getElementById('filtroCompetidor')?.value || '';
+        const filtroRed = document.getElementById('filtroRed')?.value || '';
+        const orden = document.getElementById('ordenAnuncios')?.value || 'alcance';
+
+        let lista = [...state.anuncios];
+        if (filtroComp) lista = lista.filter(a => a.competidorId === filtroComp);
+        if (filtroRed) lista = lista.filter(a => a.red === filtroRed);
+
+        // Calcular tasa de interacción para resaltado
+        const conTasa = lista.map(a => ({
+            ...a,
+            tasa: a.alcance > 0 ? a.interacciones / a.alcance : 0,
+            dias: diasActiva(a.fechaInicio)
+        }));
+        const promedioTasa = conTasa.length > 0 ? conTasa.reduce((s, a) => s + a.tasa, 0) / conTasa.length : 0;
+
+        // Ordenar
+        conTasa.sort((a, b) => {
+            switch (orden) {
+                case 'alcance': return b.alcance - a.alcance;
+                case 'interacciones': return b.interacciones - a.interacciones;
+                case 'tasa': return b.tasa - a.tasa;
+                case 'dias': return b.dias - a.dias;
+                case 'reciente': return new Date(b.fechaRegistro || 0) - new Date(a.fechaRegistro || 0);
+                default: return 0;
+            }
+        });
+
+        grid.innerHTML = '';
+        if (conTasa.length === 0) {
+            empty.style.display = 'block';
+            return;
+        }
+        empty.style.display = 'none';
+
+        conTasa.forEach((ad, idx) => {
+            const comp = state.competidores.find(c => c.id === ad.competidorId);
+            const nombreComp = comp ? comp.nombre : 'Desconocido';
+            const resaltado = ad.tasa > promedioTasa * 1.2 && promedioTasa > 0;
+            const card = document.createElement('div');
+            card.className = 'ad-card' + (resaltado ? ' highlight' : '');
+            const imgSrc = ad.imagenBase64 || '';
+            const imgHTML = imgSrc 
+                ? `<img src="${imgSrc}" alt="Captura anuncio">` 
+                : `<div style="background:#e2e8f0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:#94a3b8; font-size:0.8rem;">Sin imagen</div>`;
+            card.innerHTML = `
+                <div class="ad-image">${imgHTML}</div>
+                <div class="ad-body">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span class="ad-rank">#${idx + 1}</span>
+                        <button class="small danger" onclick="eliminarAnuncio('${ad.id}')" title="Eliminar">✕</button>
+                    </div>
+                    <div class="ad-meta">
+                        <span>${nombreComp}</span>
+                        <span style="background:${COLORES_RED[ad.red] || '#64748b'}; color:white;">${ad.red}</span>
+                        <span>${ad.formato}</span>
+                    </div>
+                    <p class="ad-text">${truncarTexto(ad.texto, 80)}</p>
+                    <div class="ad-stats">
+                        <span>👁️ ${(ad.alcance || 0).toLocaleString('es-CO')}</span>
+                        <span>❤️ ${(ad.interacciones || 0).toLocaleString('es-CO')}</span>
+                    </div>
+                    <div class="ad-stats" style="border-top:none; padding-top:0;">
+                        <span>Tasa: ${(ad.tasa * 100).toFixed(2)}%</span>
+                        <span>${ad.dias} días activa</span>
+                    </div>
+                    ${ad.enlace ? `<a href="${ad.enlace}" target="_blank" rel="noopener" style="font-size:0.8rem; color:var(--primary);">Ver anuncio →</a>` : ''}
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    window.eliminarAnuncio = function(id) {
+        if (!confirm('¿Eliminar esta pieza publicitaria?')) return;
+        state.anuncios = state.anuncios.filter(a => a.id !== id);
+        saveState();
+        renderTodo();
+    };
+
+    // Guardar anuncio con redimensión de imagen a 480px
+    function guardarAnuncio() {
+        const compId = document.getElementById('adCompetidor').value;
+        if (!compId) {
+            alert('Selecciona un competidor. Si no hay, agrega uno primero.');
+            return;
+        }
+        const red = document.getElementById('adRed').value;
+        const formato = document.getElementById('adFormato').value;
+        const alcance = Number(document.getElementById('adAlcance').value) || 0;
+        const interacciones = Number(document.getElementById('adInteracciones').value) || 0;
+        const fechaInicio = document.getElementById('adFecha').value || new Date().toISOString().split('T')[0];
+        const texto = document.getElementById('adTexto').value.trim();
+        const enlace = document.getElementById('adEnlace').value.trim();
+        const fileInput = document.getElementById('adImagen');
+
+        if (alcance <= 0) {
+            alert('El alcance debe ser mayor a 0.');
+            return;
+        }
+
+        const finalizar = (imagenBase64) => {
+            const nuevo = {
+                id: generarId(),
+                competidorId: compId,
+                red,
+                formato,
+                alcance,
+                interacciones,
+                fechaInicio,
+                texto,
+                enlace,
+                imagenBase64: imagenBase64 || '',
+                fechaRegistro: new Date().toISOString()
+            };
+            state.anuncios.push(nuevo);
+            saveState();
+            // Limpiar formulario
+            document.getElementById('adAlcance').value = '';
+            document.getElementById('adInteracciones').value = '';
+            document.getElementById('adTexto').value = '';
+            document.getElementById('adEnlace').value = '';
+            document.getElementById('adImagen').value = '';
+            renderTodo();
+            alert('✅ Anuncio registrado correctamente.');
+        };
+
+        if (fileInput.files && fileInput.files[0]) {
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const ancho = 480;
+                    const alto = Math.round((img.height / img.width) * ancho);
+                    canvas.width = ancho;
+                    canvas.height = alto;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, ancho, alto);
+                    // Calidad 0.7 para no llenar localStorage
+                    const base64 = canvas.toDataURL('image/jpeg', 0.7);
+                    finalizar(base64);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        } else {
+            finalizar('');
+        }
+    }
+
+    // --- 4. ANÁLISIS ---
+    function renderAnalisis() {
+        // KPIs
+        const kpiGrid = document.getElementById('kpiGrid');
+        if (!kpiGrid) return;
+        const totalPiezas = state.anuncios.length;
+        const alcanceTotal = state.anuncios.reduce((s, a) => s + (Number(a.alcance) || 0), 0);
+        const interaccionesTotal = state.anuncios.reduce((s, a) => s + (Number(a.interacciones) || 0), 0);
+        const tasaMedia = alcanceTotal > 0 ? (interaccionesTotal / alcanceTotal) * 100 : 0;
+
+        // Red con más alcance
+        const alcancePorRed = {};
+        state.anuncios.forEach(a => {
+            alcancePorRed[a.red] = (alcancePorRed[a.red] || 0) + (Number(a.alcance) || 0);
+        });
+        let redTop = '—';
+        let maxAlcance = 0;
+        Object.entries(alcancePorRed).forEach(([red, val]) => {
+            if (val > maxAlcance) { maxAlcance = val; redTop = red; }
+        });
+
+        kpiGrid.innerHTML = `
+            <div class="kpi-card">
+                <div class="kpi-value">${totalPiezas}</div>
+                <div class="kpi-label">Total de piezas</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">${alcanceTotal.toLocaleString('es-CO')}</div>
+                <div class="kpi-label">Alcance total</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">${tasaMedia.toFixed(2)}%</div>
+                <div class="kpi-label">Tasa de interacción media</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">${redTop}</div>
+                <div class="kpi-label">Red con más alcance</div>
+            </div>
+        `;
+
+        // Gráfica de barras apiladas
+        const barChart = document.getElementById('barChart');
+        if (barChart) {
+            barChart.innerHTML = '';
+            if (state.competidores.length === 0 || state.anuncios.length === 0) {
+                barChart.innerHTML = '<p class="empty-message">Sin datos para graficar.</p>';
+            } else {
+                // Alcance por competidor y red
+                const datos = state.competidores.map(c => {
+                    const porRed = {};
+                    REDES.forEach(r => porRed[r] = 0);
+                    state.anuncios.filter(a => a.competidorId === c.id).forEach(a => {
+                        porRed[a.red] = (porRed[a.red] || 0) + (Number(a.alcance) || 0);
+                    });
+                    const total = REDES.reduce((s, r) => s + porRed[r], 0);
+                    return { nombre: c.nombre, porRed, total };
+                });
+                const maxTotal = Math.max(...datos.map(d => d.total), 1);
+                datos.forEach(d => {
+                    const row = document.createElement('div');
+                    row.className = 'bar-row';
+                    const segmentsHTML = REDES.map(r => {
+                        if (!d.porRed[r]) return '';
+                        const pct = (d.porRed[r] / maxTotal) * 100;
+                        const showLabel = pct > 8;
+                        return `<div class="bar-segment" style="width:${pct}%; background:${COLORES_RED[r]};" title="${r}: ${d.porRed[r].toLocaleString('es-CO')}">
+                            ${showLabel ? r.charAt(0) : ''}
+                        </div>`;
+                    }).join('');
+                    row.innerHTML = `
+                        <div class="bar-label">${d.nombre}</div>
+                        <div class="bar-stack">${segmentsHTML || '<div style="width:100%; text-align:center; color:#94a3b8; font-size:0.8rem; line-height:30px;">Sin datos</div>'}</div>
+                        <div style="width:90px; text-align:right; font-weight:600; font-size:0.85rem;">${d.total.toLocaleString('es-CO')}</div>
+                    `;
+                    barChart.appendChild(row);
+                });
+                // Leyenda
+                const leyenda = document.createElement('div');
+                leyenda.style.cssText = 'display:flex; flex-wrap:wrap; gap:12px; margin-top:12px; font-size:0.75rem;';
+                leyenda.innerHTML = REDES.map(r => `<span style="display:flex; align-items:center; gap:4px;"><span style="width:12px; height:12px; background:${COLORES_RED[r]}; border-radius:3px; display:inline-block;"></span>${r}</span>`).join('');
+                barChart.appendChild(leyenda);
+            }
+        }
+
+        // Mapa de calor
+        const heatmap = document.getElementById('heatmap');
+        if (heatmap) {
+            heatmap.innerHTML = '';
+            if (state.competidores.length === 0) {
+                heatmap.innerHTML = '<tr><td class="empty-message">Sin competidores.</td></tr>';
+            } else {
+                const thead = document.createElement('thead');
+                const trHead = document.createElement('tr');
+                trHead.innerHTML = '<th>Competidor</th>' + REDES.map(r => `<th>${r}</th>`).join('') + '<th>Total</th>';
+                thead.appendChild(trHead);
+                heatmap.appendChild(thead);
+
+                const tbody = document.createElement('tbody');
+                let maxCelda = 0;
+                const matriz = state.competidores.map(c => {
+                    const fila = REDES.map(r => {
+                        const count = state.anuncios.filter(a => a.competidorId === c.id && a.red === r).length;
+                        if (count > maxCelda) maxCelda = count;
+                        return count;
+                    });
+                    return { nombre: c.nombre, fila };
+                });
+
+                matriz.forEach(m => {
+                    const tr = document.createElement('tr');
+                    const total = m.fila.reduce((s, v) => s + v, 0);
+                    const celdas = m.fila.map(v => {
+                        const intensidad = maxCelda > 0 ? v / maxCelda : 0;
+                        const bg = v > 0 ? `rgba(0, 51, 102, ${0.15 + intensidad * 0.7})` : '#ffffff';
+                        const color = intensidad > 0.5 ? 'white' : 'var(--text)';
+                        return `<td style="background:${bg}; color:${color};">${v}</td>`;
+                    }).join('');
+                    tr.innerHTML = `<td style="text-align:left;"><strong>${m.nombre}</strong></td>${celdas}<td><strong>${total}</strong></td>`;
+                    tbody.appendChild(tr);
+                });
+
+                // Fila de totales por red
+                const trTotal = document.createElement('tr');
+                trTotal.style.background = '#f1f5f9';
+                const totalesRed = REDES.map(r => state.anuncios.filter(a => a.red === r).length);
+                trTotal.innerHTML = `<td><strong>TOTAL</strong></td>${totalesRed.map(t => `<td><strong>${t}</strong></td>`).join('')}<td><strong>${state.anuncios.length}</strong></td>`;
+                tbody.appendChild(trTotal);
+
+                heatmap.appendChild(tbody);
+            }
+        }
+
+        // Conclusión automática
+        const conclusion = document.getElementById('conclusion');
+        if (conclusion) {
+            let texto = '';
+            if (state.anuncios.length === 0) {
+                texto = 'Aún no hay piezas registradas. Registra anuncios para generar conclusiones automáticas.';
+            } else {
+                // Pieza con más alcance
+                const top = [...state.anuncios].sort((a, b) => (b.alcance || 0) - (a.alcance || 0))[0];
+                const compTop = state.competidores.find(c => c.id === top.competidorId);
+                texto += `🏆 La pieza con mayor alcance es de <strong>${compTop ? compTop.nombre : 'Desconocido'}</strong> en <strong>${top.red}</strong> con <strong>${(top.alcance || 0).toLocaleString('es-CO')}</strong> de alcance. `;
+
+                // Redes donde ningún competidor pauta
+                const redesUsadas = new Set(state.anuncios.map(a => a.red));
+                const redesVacias = REDES.filter(r => !redesUsadas.has(r));
+                if (redesVacias.length > 0) {
+                    texto += `💡 <strong>Oportunidad:</strong> ningún competidor registra pauta en <strong>${redesVacias.join(', ')}</strong>. `;
+                } else {
+                    texto += '💡 Todos los competidores tienen presencia en todas las redes monitoreadas. ';
+                }
+
+                // Competidor con mayor alcance total
+                const alcancePorComp = {};
+                state.anuncios.forEach(a => {
+                    alcancePorComp[a.competidorId] = (alcancePorComp[a.competidorId] || 0) + (Number(a.alcance) || 0);
+                });
+                const topCompId = Object.entries(alcancePorComp).sort((a, b) => b[1] - a[1])[0];
+                if (topCompId) {
+                    const comp = state.competidores.find(c => c.id === topCompId[0]);
+                    if (comp) {
+                        texto += `📊 <strong>${comp.nombre}</strong> lidera en alcance total con <strong>${topCompId[1].toLocaleString('es-CO')}</strong>.`;
+                    }
+                }
+            }
+            conclusion.innerHTML = texto;
+        }
+    }
+
+    // --- CSV ---
+    function copiarCSV() {
+        let csv = 'Tipo,Competidor,Red,Formato,Alcance,Interacciones,Fecha Inicio,Texto,Enlace\n';
+        state.anuncios.forEach(a => {
+            const comp = state.competidores.find(c => c.id === a.competidorId);
+            const nombre = (comp ? comp.nombre : 'Desconocido').replace(/,/g, ';');
+            const textoLimpio = (a.texto || '').replace(/,/g, ';').replace(/\n/g, ' ');
+            const enlace = (a.enlace || '').replace(/,/g, ';');
+            csv += `Anuncio,${nombre},${a.red},${a.formato},${a.alcance},${a.interacciones},${a.fechaInicio},"${textoLimpio}",${enlace}\n`;
+        });
+        csv += '\nTipo,Competidor,Meta,Google,YouTube,TikTok,LinkedIn,Total,Última revisión\n';
+        state.competidores.forEach(c => {
+            const rev = state.revisiones[c.id];
+            const an = rev?.anuncios || {};
+            const total = REDES.reduce((s, r) => s + (Number(an[r]) || 0), 0);
+            const fecha = rev?.ultimaRevision ? formatFecha(rev.ultimaRevision) : 'Sin revisión';
+            csv += `Revisión,${c.nombre.replace(/,/g, ';')},${an.Meta || 0},${an.Google || 0},${an.YouTube || 0},${an.TikTok || 0},${an.LinkedIn || 0},${total},${fecha}\n`;
+        });
+
+        navigator.clipboard.writeText(csv).then(() => {
+            alert('✅ Datos copiados al portapapeles en formato CSV. Pégalos en Excel o Power BI.');
+        }).catch(() => {
+            // Fallback
+            const textarea = document.createElement('textarea');
+            textarea.value = csv;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            alert('✅ Datos copiados en formato CSV.');
+        });
+    }
+
+    // ==================== EVENTOS ====================
+    function initEventos() {
+        // Agregar competidor
+        document.getElementById('agregarCompetidor').addEventListener('click', () => {
+            const nombre = document.getElementById('compNombre').value.trim();
+            const dominio = document.getElementById('compDominio').value.trim();
+            const pais = document.getElementById('compPais').value;
+            if (!nombre) {
+                alert('Ingresa el nombre del competidor.');
+                return;
+            }
+            if (state.competidores.some(c => c.nombre.toLowerCase() === nombre.toLowerCase())) {
+                alert('Ese competidor ya existe.');
+                return;
+            }
+            state.competidores.push({ id: generarId(), nombre, dominio, pais });
+            document.getElementById('compNombre').value = '';
+            document.getElementById('compDominio').value = '';
+            saveState();
+            renderTodo();
+        });
+
+        // Borrar datos de ejemplo
+        document.getElementById('borrarEjemplo').addEventListener('click', () => {
+            if (!confirm('¿Borrar TODOS los datos (competidores, revisiones y anuncios)? Esta acción no se puede deshacer.')) return;
+            state = { competidores: [], revisiones: {}, anuncios: [], plazoRevision: 7, ejemploCargado: false };
+            saveState();
+            renderTodo();
+        });
+
+        // Plazo de revisión
+        document.getElementById('plazoRevision').addEventListener('change', (e) => {
+            state.plazoRevision = Number(e.target.value);
+            saveState();
+            renderTablaSeguimiento();
+        });
+
+        // Guardar anuncio
+        document.getElementById('guardarAnuncio').addEventListener('click', guardarAnuncio);
+
+        // Filtros y orden
+        ['filtroCompetidor', 'filtroRed', 'ordenAnuncios'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('change', renderAnuncios);
+        });
+
+        // Copiar CSV
+        document.getElementById('copiarCSV').addEventListener('click', copiarCSV);
+    }
+
+    // ==================== INICIALIZACIÓN ====================
+    function init() {
+        loadState();
+
+        // Si no hay datos y nunca se cargaron ejemplos, cargarlos
+        if (!localStorage.getItem(STORAGE_KEY)) {
+            cargarDatosEjemplo();
+        }
+
+        // Sincronizar select de plazo
+        const plazoSelect = document.getElementById('plazoRevision');
+        if (plazoSelect) plazoSelect.value = state.plazoRevision || 7;
+
+        initEventos();
+        renderTodo();
+    }
+
+    // Esperar a que el DOM esté listo
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+</script>
+</body>
+</html>
